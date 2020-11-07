@@ -1,0 +1,24 @@
+@media screen and (max-width: 600px) {
+  .main {
+    flex-direction: column;
+  }
+
+  .player-info,
+  .card {
+    margin-bottom: 2rem;
+    font-size: x-large;
+    width: auto;
+  }
+
+  .player-list {
+    order: 2;
+  }
+
+  .playing-field {
+    order: 1;
+  }
+
+  .rules {
+    order: 3;
+  }
+}

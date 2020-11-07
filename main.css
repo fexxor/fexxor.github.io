@@ -1,0 +1,336 @@
+/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+i,
+center,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+details,
+embed,
+figure,
+figcaption,
+footer,
+header,
+hgroup,
+menu,
+nav,
+output,
+ruby,
+section,
+summary,
+time,
+mark,
+audio,
+video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
+  display: block;
+}
+body {
+  line-height: 1;
+}
+ol,
+ul {
+  list-style: none;
+}
+blockquote,
+q {
+  quotes: none;
+}
+blockquote:before,
+blockquote:after,
+q:before,
+q:after {
+  content: "";
+  content: none;
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+/* Main CSS*/
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: white;
+  box-sizing: border-box;
+}
+
+input {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  padding: 0.5rem;
+  border-radius: 2px;
+  border: none;
+}
+
+button {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  padding: 0.5rem;
+  border: 2px solid transparent;
+  border-radius: 2px;
+  background-color: white;
+  font-weight: bolder;
+}
+
+button:hover,
+button:active {
+  cursor: pointer;
+  border-color: #e94560;
+}
+
+.main {
+  display: flex;
+  flex-direction: row;
+  min-height: 100%;
+  max-width: 100%;
+}
+
+.player-list {
+  background-color: #16213e;
+  flex: 1 0 auto;
+  padding: 2rem;
+  min-height: 100%;
+}
+
+.player-list,
+.rules {
+  max-width: 320px;
+}
+
+.player-list h2,
+.playing-field h2,
+.rules h2 {
+  font-size: x-large;
+  margin-bottom: 3rem;
+  color: #e94560;
+  font-variant: small-caps;
+}
+
+.player {
+  font-size: large;
+  padding: 1rem;
+  margin-top: 1rem;
+  border: 2px solid #0f3460;
+  border-radius: 2px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.player-name {
+  color: #e94560;
+  padding-right: 1rem;
+}
+
+.player-status {
+  display: flex;
+}
+
+.player-color-0 {
+  color: #ff9933;
+}
+
+.player-color-1 {
+  color: #66ff66;
+}
+
+.player-color-2 {
+  color: #ffff66;
+}
+
+.player-color-3 {
+  color: #aaf0d1;
+}
+
+.player-color-4 {
+  color: #ff6eff;
+}
+
+.player-color-5 {
+  color: #5946b2;
+}
+
+.player-color-6 {
+  color: #50bfe6;
+}
+
+.player-color-7 {
+  color: #ccff00;
+}
+
+.player-color-8 {
+  color: #ff00cc;
+}
+
+.player-color-9 {
+  color: #ffcc33;
+}
+
+.new-player-input {
+  display: flex;
+  justify-content: stretch;
+  margin-bottom: 2rem;
+}
+
+.new-player-input input {
+  flex: 1;
+  margin-right: 1rem;
+}
+
+.delete-button {
+  padding: 0 0.25rem;
+  border-radius: 50%;
+  font-weight: bold;
+}
+
+.playing-field {
+  padding: 2rem;
+  flex: 3 0 auto;
+  min-height: 100%;
+  background-color: #1a1a2e;
+}
+
+.content-center {
+  flex-direction: column;
+  display: flex;
+  align-items: center;
+}
+
+.bolder {
+  font-weight: bolder;
+}
+
+.player-info,
+.card {
+  margin-bottom: 2rem;
+  font-size: x-large;
+  width: 500px;
+  text-align: center;
+  min-height: 3rem;
+  word-break: break-all;
+}
+
+.card img {
+  border: 2px solid transparent;
+  border-radius: 16px;
+  height: 50vh;
+}
+
+.card img:hover,
+.card img:active {
+  cursor: pointer;
+  border-color: #e94560;
+}
+
+.rules {
+  padding: 2rem;
+  flex: 1 0 auto;
+  min-height: 100%;
+  background-color: #0f3460;
+  display: flex;
+  flex-direction: column;
+}
+
+.rules h3 {
+  margin-bottom: 1rem;
+}
+
+.rules p {
+  margin-bottom: 2rem;
+}
+
+.spacing-1 {
+  margin-bottom: 1rem;
+}
+
+.spacing-2 {
+  margin-bottom: 2rem;
+}
+
+.visibility-hidden {
+  visibility: hidden;
+}
