@@ -1,4 +1,4 @@
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 800px) {
   .main {
     flex-direction: column;
   }
@@ -20,5 +20,31 @@
 
   .rules {
     order: 3;
+  }
+
+  .player-list,
+  .rules {
+    max-width: 100%;
+  }
+}
+
+@media screen and (max-width: 1260px) {
+  .main {
+    flex-direction: column;
+  }
+  .player-list {
+    order: 2;
+  }
+
+  .playing-field {
+    order: 1;
+  }
+
+  .rules {
+    order: 3;
+  }
+  .player-list,
+  .rules {
+    max-width: 100%;
   }
 }
