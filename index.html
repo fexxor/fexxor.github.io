@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <title>Main</title>
-  <meta content="width=device-width, initial-scale=1" name="viewport" />
   <link rel="stylesheet" href="main.css">
   <link rel="stylesheet" href="mobile.css">
 </head>
@@ -5822,7 +5821,7 @@ var $author$project$Main$shuffleCards = function () {
 						[$author$project$Main$Two, $author$project$Main$Three, $author$project$Main$Four, $author$project$Main$Five, $author$project$Main$Six, $author$project$Main$Seven, $author$project$Main$Eight, $author$project$Main$Nine, $author$project$Main$Ten, $author$project$Main$Jack, $author$project$Main$Queen, $author$project$Main$King, $author$project$Main$Ace])))));
 }();
 var $author$project$Main$init = _Utils_Tuple2(
-	{cards: _List_Nil, currentCard: $elm$core$Maybe$Nothing, currentPlayerIndex: 0, newPlayerName: $elm$core$Maybe$Nothing, players: _List_Nil, questionQueen: $elm$core$Maybe$Nothing, snakeEyes: $elm$core$Maybe$Nothing, thumbMaster: $elm$core$Maybe$Nothing},
+	{cards: _List_Nil, currentCard: $elm$core$Maybe$Nothing, newPlayerName: $elm$core$Maybe$Nothing, players: _List_Nil, questionQueen: $elm$core$Maybe$Nothing, snakeEyes: $elm$core$Maybe$Nothing, thumbMaster: $elm$core$Maybe$Nothing},
 	$author$project$Main$shuffleCards);
 var $author$project$Main$EnterKey = {$: 'EnterKey'};
 var $author$project$Main$KeyDown = function (a) {
@@ -6152,14 +6151,15 @@ var $elm$core$List$filter = F2(
 			_List_Nil,
 			list);
 	});
-var $author$project$Main$getPlayer = F2(
-	function (players, index) {
-		var numberOfPlayers = $elm$core$List$length(players);
-		return (numberOfPlayers < 1) ? $elm$core$Maybe$Nothing : A2(
-			$elm$core$Array$get,
-			A2($elm$core$Basics$modBy, numberOfPlayers, index),
-			$elm$core$Array$fromList(players));
-	});
+var $elm$core$List$head = function (list) {
+	if (list.b) {
+		var x = list.a;
+		var xs = list.b;
+		return $elm$core$Maybe$Just(x);
+	} else {
+		return $elm$core$Maybe$Nothing;
+	}
+};
 var $elm$core$List$isEmpty = function (xs) {
 	if (!xs.b) {
 		return true;
@@ -6170,15 +6170,6 @@ var $elm$core$List$isEmpty = function (xs) {
 var $elm$core$Basics$neq = _Utils_notEqual;
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
-var $elm$core$List$head = function (list) {
-	if (list.b) {
-		var x = list.a;
-		var xs = list.b;
-		return $elm$core$Maybe$Just(x);
-	} else {
-		return $elm$core$Maybe$Nothing;
-	}
-};
 var $elm$core$Maybe$map = F2(
 	function (f, maybe) {
 		if (maybe.$ === 'Just') {
@@ -6294,8 +6285,8 @@ var $author$project$Main$update = F2(
 					var remaining = _v2.b;
 					var _v4 = function () {
 						var _v5 = _Utils_Tuple2(
-							A2($author$project$Main$getPlayer, model.players, model.currentPlayerIndex - 1),
-							model.currentCard);
+							$elm$core$List$head(model.players),
+							current);
 						if ((_v5.a.$ === 'Just') && (_v5.b.$ === 'Just')) {
 							var currentPlayer = _v5.a.a;
 							var currentCard = _v5.b.a;
@@ -6312,7 +6303,26 @@ var $author$project$Main$update = F2(
 					var newSnakeEyes = _v4.c;
 					var newModel = _Utils_update(
 						model,
-						{cards: remaining, currentCard: current, currentPlayerIndex: model.currentPlayerIndex + 1, questionQueen: newQuestionQueen, snakeEyes: newSnakeEyes, thumbMaster: newThumbMaster});
+						{
+							cards: remaining,
+							currentCard: current,
+							players: function () {
+								var _v6 = model.players;
+								if (_v6.b) {
+									var x = _v6.a;
+									var xs = _v6.b;
+									return _Utils_ap(
+										xs,
+										_List_fromArray(
+											[x]));
+								} else {
+									return model.players;
+								}
+							}(),
+							questionQueen: newQuestionQueen,
+							snakeEyes: newSnakeEyes,
+							thumbMaster: newThumbMaster
+						});
 					return _Utils_Tuple2(newModel, $elm$core$Platform$Cmd$none);
 				}
 			case 'CardsShuffled':
@@ -6396,6 +6406,7 @@ var $elm$html$Html$Events$onInput = function (tagger) {
 			A2($elm$json$Json$Decode$map, tagger, $elm$html$Html$Events$targetValue)));
 };
 var $elm$html$Html$Attributes$placeholder = $elm$html$Html$Attributes$stringProperty('placeholder');
+var $elm$core$List$sortBy = _List_sortBy;
 var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
 var $elm$html$Html$Attributes$value = $elm$html$Html$Attributes$stringProperty('value');
@@ -6511,6 +6522,12 @@ var $author$project$Main$viewPlayer = F2(
 				]));
 	});
 var $author$project$Main$viewPlayers = function (model) {
+	var orderedPlayers = A2(
+		$elm$core$List$sortBy,
+		function ($) {
+			return $.id;
+		},
+		model.players);
 	return A2(
 		$elm$html$Html$div,
 		_List_fromArray(
@@ -6561,7 +6578,7 @@ var $author$project$Main$viewPlayers = function (model) {
 				A2(
 					$elm$core$List$map,
 					$author$project$Main$viewPlayer(model),
-					model.players))
+					orderedPlayers))
 			]));
 };
 var $author$project$Main$DrawNewCardClicked = {$: 'DrawNewCardClicked'};
@@ -6653,13 +6670,13 @@ var $author$project$Main$getRuleString = function (card) {
 		case 'Ten':
 			return 'Regel!';
 		case 'Jack':
-			return 'Du har tum-makten!!';
+			return 'Du är Thumb master!';
 		case 'Queen':
 			return 'Du är Question queen!';
 		case 'King':
 			return 'Kungamakten!';
 		default:
-			return 'Du har Snake eyes!.';
+			return 'Du har Snake eyes!';
 	}
 };
 var $elm$html$Html$img = _VirtualDom_node('img');
@@ -6672,6 +6689,28 @@ var $elm$html$Html$Attributes$src = function (url) {
 		_VirtualDom_noJavaScriptOrHtmlUri(url));
 };
 var $author$project$Main$viewPlayingField = function (model) {
+	var _v0 = function () {
+		var _v1 = model.players;
+		if (_v1.b) {
+			if (_v1.b.b) {
+				var first = _v1.a;
+				var _v2 = _v1.b;
+				var second = _v2.a;
+				return _Utils_Tuple2(
+					$elm$core$Maybe$Just(first),
+					$elm$core$Maybe$Just(second));
+			} else {
+				var first = _v1.a;
+				return _Utils_Tuple2(
+					$elm$core$Maybe$Just(first),
+					$elm$core$Maybe$Nothing);
+			}
+		} else {
+			return _Utils_Tuple2($elm$core$Maybe$Nothing, $elm$core$Maybe$Nothing);
+		}
+	}();
+	var currentPlayer = _v0.a;
+	var nextPlayer = _v0.b;
 	return A2(
 		$elm$html$Html$div,
 		_List_fromArray(
@@ -6702,15 +6741,14 @@ var $author$project$Main$viewPlayingField = function (model) {
 								$elm$html$Html$Attributes$class('player-info')
 							]),
 						function () {
-							var _v0 = _Utils_Tuple2(model.currentCard, model.cards);
-							if (_v0.a.$ === 'Just') {
-								var card = _v0.a.a;
+							var _v3 = _Utils_Tuple2(model.currentCard, model.cards);
+							if (_v3.a.$ === 'Just') {
+								var card = _v3.a.a;
 								return _List_fromArray(
 									[
 										function () {
-										var _v1 = A2($author$project$Main$getPlayer, model.players, model.currentPlayerIndex - 1);
-										if (_v1.$ === 'Just') {
-											var player = _v1.a;
+										if (currentPlayer.$ === 'Just') {
+											var player = currentPlayer.a;
 											return A2(
 												$elm$html$Html$div,
 												_List_fromArray(
@@ -6731,14 +6769,14 @@ var $author$project$Main$viewPlayingField = function (model) {
 										$author$project$Main$getRuleString(card))
 									]);
 							} else {
-								if (!_v0.b.b) {
-									var _v2 = _v0.a;
+								if (!_v3.b.b) {
+									var _v5 = _v3.a;
 									return _List_fromArray(
 										[
 											$elm$html$Html$text('Spelet är slut!')
 										]);
 								} else {
-									var _v3 = _v0.a;
+									var _v6 = _v3.a;
 									return _List_fromArray(
 										[
 											$elm$html$Html$text('Dags att sätta igång!')
@@ -6771,20 +6809,17 @@ var $author$project$Main$viewPlayingField = function (model) {
 								$elm$html$Html$Attributes$class('player-info')
 							]),
 						function () {
-							var _v4 = _Utils_Tuple3(
-								A2($author$project$Main$getPlayer, model.players, model.currentPlayerIndex),
-								model.cards,
-								model.currentCard);
-							if (_v4.a.$ === 'Nothing') {
-								var _v6 = _v4.a;
+							var _v7 = _Utils_Tuple3(nextPlayer, model.cards, model.currentCard);
+							if (_v7.a.$ === 'Nothing') {
+								var _v9 = _v7.a;
 								return _List_fromArray(
 									[
 										$elm$html$Html$text('Lägg till några spelare!')
 									]);
 							} else {
-								if (_v4.b.b) {
-									var player = _v4.a.a;
-									var _v5 = _v4.b;
+								if (_v7.b.b) {
+									var player = _v7.a.a;
+									var _v8 = _v7.b;
 									return _List_fromArray(
 										[
 											$elm$html$Html$text('Nästa spelare är '),
@@ -6804,7 +6839,7 @@ var $author$project$Main$viewPlayingField = function (model) {
 											($elm$core$List$length(model.players) === 1) ? ' Men du vill väl inte spela ensam?' : '')
 										]);
 								} else {
-									if (_v4.c.$ === 'Just') {
+									if (_v7.c.$ === 'Just') {
 										return _List_fromArray(
 											[
 												A2(
@@ -6816,7 +6851,7 @@ var $author$project$Main$viewPlayingField = function (model) {
 													]))
 											]);
 									} else {
-										var _v7 = _v4.c;
+										var _v10 = _v7.c;
 										return _List_fromArray(
 											[
 												A2(
@@ -6850,327 +6885,69 @@ var $author$project$Main$viewPlayingField = function (model) {
 var $elm$html$Html$h3 = _VirtualDom_node('h3');
 var $elm$html$Html$li = _VirtualDom_node('li');
 var $elm$html$Html$ul = _VirtualDom_node('ul');
-var $author$project$Main$viewRules = A2(
-	$elm$html$Html$div,
-	_List_fromArray(
-		[
-			$elm$html$Html$Attributes$class('rules')
-		]),
-	_List_fromArray(
-		[
-			A2(
-			$elm$html$Html$h2,
-			_List_Nil,
-			_List_fromArray(
-				[
-					$elm$html$Html$text('Regler')
-				])),
-			A2(
-			$elm$html$Html$ul,
-			_List_Nil,
-			_List_fromArray(
-				[
-					A2(
-					$elm$html$Html$li,
-					_List_Nil,
-					_List_fromArray(
-						[
-							A2(
-							$elm$html$Html$h3,
-							_List_fromArray(
-								[
-									$elm$html$Html$Attributes$class('bolder')
-								]),
-							_List_fromArray(
-								[
-									$elm$html$Html$text('Tvåa')
-								])),
-							A2(
-							$elm$html$Html$p,
-							_List_Nil,
-							_List_fromArray(
-								[
-									$elm$html$Html$text('Rött kort, dela ut två klunkar. Svart kort, drick två klunkar själv.')
-								]))
-						])),
-					A2(
-					$elm$html$Html$li,
-					_List_Nil,
-					_List_fromArray(
-						[
-							A2(
-							$elm$html$Html$h3,
-							_List_fromArray(
-								[
-									$elm$html$Html$Attributes$class('bolder')
-								]),
-							_List_fromArray(
-								[
-									$elm$html$Html$text('Trea')
-								])),
-							A2(
-							$elm$html$Html$p,
-							_List_Nil,
-							_List_fromArray(
-								[
-									$elm$html$Html$text('Rött kort, dela ut tre klunkar. Svart kort, drick två klunkar själv.')
-								]))
-						])),
-					A2(
-					$elm$html$Html$li,
-					_List_Nil,
-					_List_fromArray(
-						[
-							A2(
-							$elm$html$Html$h3,
-							_List_fromArray(
-								[
-									$elm$html$Html$Attributes$class('bolder')
-								]),
-							_List_fromArray(
-								[
-									$elm$html$Html$text('Fyra')
-								])),
-							A2(
-							$elm$html$Html$p,
-							_List_Nil,
-							_List_fromArray(
-								[
-									$elm$html$Html$text('Rött kort, dela ut fyra klunkar. Svart kort, drick fyra klunkar själv.')
-								]))
-						])),
-					A2(
-					$elm$html$Html$li,
-					_List_Nil,
-					_List_fromArray(
-						[
-							A2(
-							$elm$html$Html$h3,
-							_List_fromArray(
-								[
-									$elm$html$Html$Attributes$class('bolder')
-								]),
-							_List_fromArray(
-								[
-									$elm$html$Html$text('Femma')
-								])),
-							A2(
-							$elm$html$Html$p,
-							_List_Nil,
-							_List_fromArray(
-								[
-									$elm$html$Html$text('Rött kort, dela ut fem klunkar. Svart kort, drick fem klunkar själv.')
-								]))
-						])),
-					A2(
-					$elm$html$Html$li,
-					_List_Nil,
-					_List_fromArray(
-						[
-							A2(
-							$elm$html$Html$h3,
-							_List_fromArray(
-								[
-									$elm$html$Html$Attributes$class('bolder')
-								]),
-							_List_fromArray(
-								[
-									$elm$html$Html$text('Sexa')
-								])),
-							A2(
-							$elm$html$Html$p,
-							_List_Nil,
-							_List_fromArray(
-								[
-									$elm$html$Html$text('Sanning eller konsekvens. Spelaren som dragit kortet får välja mellan sanning och konsekvens. Resten av spelarna bestämmer vad som händer sen')
-								]))
-						])),
-					A2(
-					$elm$html$Html$li,
-					_List_Nil,
-					_List_fromArray(
-						[
-							A2(
-							$elm$html$Html$h3,
-							_List_fromArray(
-								[
-									$elm$html$Html$Attributes$class('bolder')
-								]),
-							_List_fromArray(
-								[
-									$elm$html$Html$text('Sjua')
-								])),
-							A2(
-							$elm$html$Html$p,
-							_List_Nil,
-							_List_fromArray(
-								[
-									$elm$html$Html$text('Pekleken. Spelaren som dragit kortet ställer en fråga som börjar på \'Vem här är mest trolig att...\' och efter nedräkning från tre pekar alla samtidigt på den personen man tycker passar in bäst på beskrivningen')
-								]))
-						])),
-					A2(
-					$elm$html$Html$li,
-					_List_Nil,
-					_List_fromArray(
-						[
-							A2(
-							$elm$html$Html$h3,
-							_List_fromArray(
-								[
-									$elm$html$Html$Attributes$class('bolder')
-								]),
-							_List_fromArray(
-								[
-									$elm$html$Html$text('Åtta')
-								])),
-							A2(
-							$elm$html$Html$p,
-							_List_Nil,
-							_List_fromArray(
-								[
-									$elm$html$Html$text('Jag har aldrig. Spelaren som dragit kortet säger ett påstånde som börjar med \'Jag har aldrig...\'. De som har gjort det som påståendet handlar om dricker en klunk.')
-								]))
-						])),
-					A2(
-					$elm$html$Html$li,
-					_List_Nil,
-					_List_fromArray(
-						[
-							A2(
-							$elm$html$Html$h3,
-							_List_fromArray(
-								[
-									$elm$html$Html$Attributes$class('bolder')
-								]),
-							_List_fromArray(
-								[
-									$elm$html$Html$text('Nio')
-								])),
-							A2(
-							$elm$html$Html$p,
-							_List_Nil,
-							_List_fromArray(
-								[
-									$elm$html$Html$text('Saga. Alla spelare säger i tur och ordning ett ord vara som tillsammans bildar en saga. Om någon spelare säger något som inte passar in eller tvekar för länge förlorar den, och får dricka tre klunkar.')
-								]))
-						])),
-					A2(
-					$elm$html$Html$li,
-					_List_Nil,
-					_List_fromArray(
-						[
-							A2(
-							$elm$html$Html$h3,
-							_List_fromArray(
-								[
-									$elm$html$Html$Attributes$class('bolder')
-								]),
-							_List_fromArray(
-								[
-									$elm$html$Html$text('Tio')
-								])),
-							A2(
-							$elm$html$Html$p,
-							_List_Nil,
-							_List_fromArray(
-								[
-									$elm$html$Html$text('Regel. Spelaren som dragit kortet får hitta på en regel. Man kan t.ex. förbjuda ord eller gester, eller bara tvinga någon att prata gotländska under resten av spelet. Brott mot regler bestraffas med att dricka en klunk av valfri dryck.')
-								]))
-						])),
-					A2(
-					$elm$html$Html$li,
-					_List_Nil,
-					_List_fromArray(
-						[
-							A2(
-							$elm$html$Html$h3,
-							_List_fromArray(
-								[
-									$elm$html$Html$Attributes$class('bolder')
-								]),
-							_List_fromArray(
-								[
-									$elm$html$Html$text('Knekt 👍')
-								])),
-							A2(
-							$elm$html$Html$p,
-							_List_Nil,
-							_List_fromArray(
-								[
-									$elm$html$Html$text('Tum-makten. När som helst under spelets gång kan spelaren som dragit detta kort sätta en tumme mot bordskanten. Den av de andra spelarna som är sist med att göra detsamma får dricka. Detta får spelaren göra hur många gånger som helst, fram till att någon annan drar en knekt.')
-								]))
-						])),
-					A2(
-					$elm$html$Html$li,
-					_List_Nil,
-					_List_fromArray(
-						[
-							A2(
-							$elm$html$Html$h3,
-							_List_fromArray(
-								[
-									$elm$html$Html$Attributes$class('bolder')
-								]),
-							_List_fromArray(
-								[
-									$elm$html$Html$text('Dam 👑')
-								])),
-							A2(
-							$elm$html$Html$p,
-							_List_Nil,
-							_List_fromArray(
-								[
-									$elm$html$Html$text('Question queen. Spelaren som har dragit kortet är nu Question Queen. Det innebär att den som svarar på en fråga som spelaren ställer, när som helst under spelet, måste dricka en klunk som straff. Detta gäller tills att någon annan drar en dam.')
-								]))
-						])),
-					A2(
-					$elm$html$Html$li,
-					_List_Nil,
-					_List_fromArray(
-						[
-							A2(
-							$elm$html$Html$h3,
-							_List_fromArray(
-								[
-									$elm$html$Html$Attributes$class('bolder')
-								]),
-							_List_fromArray(
-								[
-									$elm$html$Html$text('Kung')
-								])),
-							A2(
-							$elm$html$Html$p,
-							_List_Nil,
-							_List_fromArray(
-								[
-									$elm$html$Html$text('Kungamakten. Spelaren som dragit kortet får bestraffa valfri person med upp till 10 klunkar.')
-								]))
-						])),
-					A2(
-					$elm$html$Html$li,
-					_List_Nil,
-					_List_fromArray(
-						[
-							A2(
-							$elm$html$Html$h3,
-							_List_fromArray(
-								[
-									$elm$html$Html$Attributes$class('bolder')
-								]),
-							_List_fromArray(
-								[
-									$elm$html$Html$text('Äss 👁️')
-								])),
-							A2(
-							$elm$html$Html$p,
-							_List_Nil,
-							_List_fromArray(
-								[
-									$elm$html$Html$text('Snake Eyes. Spelaren som har dragit kortet har nu Snake Eyes. Det innebär att den som ser spelaren i ögonen, när som helst under spelet, måste dricka en klunk som straff. Detta gäller tills att någon annan drar ett äss.')
-								]))
-						]))
-				]))
-		]));
+var $author$project$Main$viewRules = function () {
+	var rule = F2(
+		function (title, description) {
+			return A2(
+				$elm$html$Html$li,
+				_List_Nil,
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$h3,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('bolder')
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text(title)
+							])),
+						A2(
+						$elm$html$Html$p,
+						_List_Nil,
+						_List_fromArray(
+							[
+								$elm$html$Html$text(description)
+							]))
+					]));
+		});
+	return A2(
+		$elm$html$Html$div,
+		_List_fromArray(
+			[
+				$elm$html$Html$Attributes$class('rules')
+			]),
+		_List_fromArray(
+			[
+				A2(
+				$elm$html$Html$h2,
+				_List_Nil,
+				_List_fromArray(
+					[
+						$elm$html$Html$text('Regler')
+					])),
+				A2(
+				$elm$html$Html$ul,
+				_List_Nil,
+				_List_fromArray(
+					[
+						A2(rule, 'Tvåa', 'Rött kort, dela ut två klunkar. Svart kort, drick två klunkar själv.'),
+						A2(rule, 'Trea', 'Rött kort, dela ut tre klunkar. Svart kort, drick två klunkar själv.'),
+						A2(rule, 'Fyra', 'Rött kort, dela ut fyra klunkar. Svart kort, drick fyra klunkar själv.'),
+						A2(rule, 'Femma', 'Rött kort, dela ut fem klunkar. Svart kort, drick fem klunkar själv.'),
+						A2(rule, 'Sexa', 'Sanning eller konsekvens. Spelaren som dragit kortet får välja mellan sanning och konsekvens. Resten av spelarna bestämmer vad som händer sen'),
+						A2(rule, 'Sjua', 'Pekleken. Spelaren som dragit kortet ställer en fråga som börjar på \'Vem här är mest trolig att...\' och efter nedräkning från tre pekar alla samtidigt på den personen man tycker passar in bäst på beskrivningen'),
+						A2(rule, 'Åtta', 'Jag har aldrig. Spelaren som dragit kortet säger ett påstånde som börjar med \'Jag har aldrig...\'. De som har gjort det som påståendet handlar om dricker en klunk.'),
+						A2(rule, 'Nio', 'Saga. Alla spelare säger i tur och ordning ett ord vara som tillsammans bildar en saga. Om någon spelare säger något som inte passar in eller tvekar för länge förlorar den, och får dricka tre klunkar.'),
+						A2(rule, 'Tio', 'Regel. Spelaren som dragit kortet får hitta på en regel. Man kan t.ex. förbjuda ord eller gester, eller bara tvinga någon att prata gotländska under resten av spelet. Brott mot regler bestraffas med att dricka en klunk av valfri dryck.'),
+						A2(rule, 'Knekt 👍', 'Thumb master. När som helst under spelets gång kan spelaren som dragit detta kort sätta en tumme mot bordskanten. Den av de andra spelarna som är sist med att göra detsamma får dricka. Detta får spelaren göra hur många gånger som helst, fram till att någon annan drar en knekt.'),
+						A2(rule, 'Dam 👑', 'Question queen. Spelaren som har dragit kortet är nu Question Queen. Det innebär att den som svarar på en fråga som spelaren ställer, när som helst under spelet, måste dricka en klunk som straff. Detta gäller tills att någon annan drar en dam.'),
+						A2(rule, 'Kung', 'Kungamakten. Spelaren som dragit kortet får bestraffa valfri person med upp till 10 klunkar.'),
+						A2(rule, 'Äss 👁️', 'Snake Eyes. Spelaren som har dragit kortet har nu Snake Eyes. Det innebär att den som ser spelaren i ögonen, när som helst under spelet, måste dricka en klunk som straff. Detta gäller tills att någon annan drar ett äss.')
+					]))
+			]));
+}();
 var $author$project$Main$view = function (model) {
 	return {
 		body: _List_fromArray(
