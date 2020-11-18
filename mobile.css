@@ -1,13 +1,15 @@
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 900px) and (device-max-width: 900px) {
   .main {
     flex-direction: column;
   }
 
   .player-info,
   .card {
-    margin-bottom: 2rem;
-    font-size: x-large;
-    width: auto;
+    width: 100%;
+  }
+
+  .card {
+    width: 100%;
   }
 
   .player-list {
@@ -20,5 +22,31 @@
 
   .rules {
     order: 3;
+  }
+
+  .player-list,
+  .rules {
+    max-width: 100%;
+  }
+}
+
+@media screen and (max-width: 1260px) {
+  .main {
+    flex-direction: column;
+  }
+  .player-list {
+    order: 2;
+  }
+
+  .playing-field {
+    order: 1;
+  }
+
+  .rules {
+    order: 3;
+  }
+  .player-list,
+  .rules {
+    max-width: 100%;
   }
 }
