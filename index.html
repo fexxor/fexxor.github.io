@@ -6703,7 +6703,7 @@ var $author$project$Main$viewPlayingField = function (model) {
 				var first = _v1.a;
 				return _Utils_Tuple2(
 					$elm$core$Maybe$Just(first),
-					$elm$core$Maybe$Nothing);
+					$elm$core$Maybe$Just(first));
 			}
 		} else {
 			return _Utils_Tuple2($elm$core$Maybe$Nothing, $elm$core$Maybe$Nothing);
@@ -6765,8 +6765,14 @@ var $author$project$Main$viewPlayingField = function (model) {
 											return A2($elm$html$Html$span, _List_Nil, _List_Nil);
 										}
 									}(),
-										$elm$html$Html$text(
-										$author$project$Main$getRuleString(card))
+										A2(
+										$elm$html$Html$div,
+										_List_Nil,
+										_List_fromArray(
+											[
+												$elm$html$Html$text(
+												$author$project$Main$getRuleString(card))
+											]))
 									]);
 							} else {
 								if (!_v3.b.b) {
