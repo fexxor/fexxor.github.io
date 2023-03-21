@@ -1,18 +1,18 @@
 {
   "files": {
     "main.css": "https://fexxor.github.io/alex/static/css/main.8e7f602e.css",
-    "main.js": "https://fexxor.github.io/alex/static/js/main.43a7b589.js",
+    "main.js": "https://fexxor.github.io/alex/static/js/main.ab318479.js",
     "static/js/787.bb8ee0bb.chunk.js": "https://fexxor.github.io/alex/static/js/787.bb8ee0bb.chunk.js",
     "static/media/play.svg": "https://fexxor.github.io/alex/static/media/play.1f28845fe722adf4d41ba698acfc61a7.svg",
     "static/media/vimeo.svg": "https://fexxor.github.io/alex/static/media/vimeo.087edcb2eb5e6ff26f16eb2b2ce1b936.svg",
     "static/media/fb.svg": "https://fexxor.github.io/alex/static/media/fb.a02f7d0221ffac771c2870af7bea9a82.svg",
     "index.html": "https://fexxor.github.io/alex/index.html",
     "main.8e7f602e.css.map": "https://fexxor.github.io/alex/static/css/main.8e7f602e.css.map",
-    "main.43a7b589.js.map": "https://fexxor.github.io/alex/static/js/main.43a7b589.js.map",
+    "main.ab318479.js.map": "https://fexxor.github.io/alex/static/js/main.ab318479.js.map",
     "787.bb8ee0bb.chunk.js.map": "https://fexxor.github.io/alex/static/js/787.bb8ee0bb.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.8e7f602e.css",
-    "static/js/main.43a7b589.js"
+    "static/js/main.ab318479.js"
   ]
 }
