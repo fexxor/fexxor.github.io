@@ -43,7 +43,7 @@
         }
       };
 
-      oReq.open("GET", "/api/cards", true);
+      oReq.open("GET", "/fellowship/api/cards", true);
       oReq.responseType = "json";
       oReq.send();
     }
