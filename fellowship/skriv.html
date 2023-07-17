@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Skriv kort</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="css/thempo.ttf" rel="stylesheet" type="text/css" />
+    <link href="css/immortal.ttf" rel="stylesheet" type="text/css" />
+    <link href="css/style.css" rel="stylesheet" type="text/css" />
+    <script src="js/index.js" type="text/javascript"></script>
+    <script src="js/skriv.js" type="text/javascript"></script>
+  </head>
+  <body onload="app.skriv.init()">
+    <div id="wrapper" class="big-card">
+      <h1 class="white-bg">Skriv kort</h1>
+
+      <div id="instructions" class="white-bg">
+        <p>
+          Här kan du fylla på med nya kort till spelet, eller redigera
+          befintliga. Det finns dock några saker som kan vara bra att tänka på.
+        </p>
+        <ul>
+          <li>
+            Försök att bibehålla en bra balans mellan positiva och negativa
+            kort, och tänk på att kort med beslut oftast är mer intressanta än
+            rena händelsekort.
+          </li>
+          <li>
+            Spara de mer drastiska korten, t.ex. där spelare kan dö, till de
+            senare delarna av spelet, så att man slipper åka ut så tidigt.
+          </li>
+          <li>
+            Skriv konsekverna av kortet på samma sätt som andra kort, dvs i
+            slutet inom parentes, och med beteckningarna 'resurs', 'nyckel' och
+            'GP'. Exempelvis (+2 resurser, -1 GP, 1 nyckel).
+          </li>
+        </ul>
+      </div>
+
+      <div class="white-bg get-card">
+        <h3>Redigera ett befintligt kort</h3>
+        <div>
+          <div id="id-input">
+            <input type="text" id="id-field" placeholder="Fyll i kortets id" />
+          </div>
+          <button onclick="app.skriv.editCard()">Hämta</button>
+        </div>
+      </div>
+
+      <form class="white-bg mb-1" name="card-form" id="card-form">
+        <h3 class="mb-1">Lägg till ett nytt kort</h3>
+        <label id="id-view"
+          >ID:&nbsp;&nbsp;&nbsp;<span id="card-id"></span
+          ><span
+            id="close-edit"
+            onclick="app.skriv.closeEditing()"
+            title="Avbryt redigering"
+            >&times;</span
+          ></label
+        >
+        <label for="category">Kategori</label>
+        <select name="category">
+          <option class="placeholder" value="" disabled selected>
+            Välj kategori
+          </option>
+          <option value="water">Vatten</option>
+          <option value="forest">Skog</option>
+          <option value="city">Stad</option>
+          <option value="mountain">Berg</option>
+          <option value="shortcut">Genväg</option>
+        </select>
+        <label for="class">Korttyp</label>
+        <select name="class">
+          <option class="placeholder" value="" disabled selected>
+            Välj typ av kort
+          </option>
+          <option value="action">Händelse</option>
+          <option value="group">Grupp</option>
+          <option value="individual">Individuellt</option>
+        </select>
+        <label for="title">Titel</label>
+        <input name="title" type="text" />
+        <label for="content">Innehåll</label>
+        <textarea name="content" rows="5"></textarea>
+        <label>Alternativ</label>
+        <div id="options">
+          <textarea rows="3" class="option"></textarea>
+        </div>
+        <button class="add" onclick="app.skriv.addOption(event, '')">+</button>
+        <br />
+        <button id="save" onclick="app.skriv.createCard(event)">
+          Spara kort!
+        </button>
+      </form>
+    </div>
+  </body>
+</html>
