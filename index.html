@@ -1,26 +1,124 @@
 <!DOCTYPE html>
-<html
-  style="
-    height: 100%;
-    width: 100%;
-    padding: 0;
-    margin: 0;
-    background-color: black;
-  "
->
-  <body style="height: 100%; width: 100%; padding: 0; margin: 0">
-    <div
-      style="
+<html lang="sv">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+      :root {
+        --color-01: #1e3a5f; /* deep blue */
+        --color-02: #254d3b; /* emerald */
+        --color-03: #5a3b7a; /* purple */
+        --color-04: #713b45; /* ruby */
+        --color-05: #7a4728; /* burnt orange */
+        --color-06: #5d5520; /* golden olive */
+        --color-07: #174f5a; /* teal */
+        --color-08: #403b78; /* indigo */
+        --color-09: #762f5b; /* magenta */
+        --color-10: #285f5b; /* sea green */
+        --color-11: #6b3f25; /* copper */
+        --color-12: #3b526e; /* steel blue */
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body, html {
         height: 100%;
-        color: wheat;
-        line-height: 47dvh;
-        font-size: 47dvh;
-        word-wrap: break-word;
-        text-align: center;
-        margin: auto 0;
-      "
-    >
-      KEREKLIDIS
-    </div>
+        width: 100%;
+        padding: 0;
+        margin: 0;
+        background-color: black;
+      }
+
+      .container {
+        margin: 0;
+        display: grid;
+        height: 100%;
+        width: 100%;
+        padding: 0;
+        list-style-type: none;
+        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-rows: 1fr 1fr;
+
+        @media (max-width: 1200px) {
+          grid-template-columns: 1fr 1fr;
+          grid-template-rows: 1fr 1fr 1fr;
+        }
+
+        @media (max-width: 660px) {
+          grid-template-columns: 1fr;
+          grid-template-rows: auto;
+        }
+
+        li a {
+          height: 100%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          font-size: 2rem;
+          color: white;
+          text-decoration: none;
+          font-family: Arial, sans-serif;
+          text-transform: uppercase;
+          padding: 1rem;
+          letter-spacing: 0.1rem;
+          font-weight: 600;
+          
+          &:hover {
+            border: 1px solid rgba(255, 255, 255, 0.5);
+          }
+
+          @media (max-width: 660px) {
+            font-size: 1.5rem;
+          }
+        }
+
+        li:nth-child(1) {
+          background-color: var(--color-01);
+        }
+
+        li:nth-child(2) {
+          background-color: var(--color-02);
+        }
+
+        li:nth-child(3) {
+          background-color: var(--color-03);
+        }
+
+        li:nth-child(4) {
+          background-color: var(--color-04);
+        }
+
+        li:nth-child(5) {
+          background-color: var(--color-05);
+        }
+
+        li:nth-child(6) {
+          background-color: var(--color-06);
+        }
+      }
+    </style>
+  </head>
+  <body >
+     <ul class="container">
+      <li>
+        <a href="/fellowship/">Brödraskapet</a>
+      </li>
+      <li>
+        <a href="/coin-clicker/">Coin Clicker</a>
+      </li>
+      <li>
+        <a href="/hocus-pocus/">Hokus Pokus</a>
+      </li>
+      <li>
+        <a href="/kung/">Kung</a>
+      </li>
+      <li>
+        <a href="/knight-fight/">Riddarspelet</a>
+      </li>
+      <li>
+        <a href="/yahtzee/">Yatzy</a>
+      </li>
+     </ul>
   </body>
 </html>
