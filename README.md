@@ -10,3 +10,9 @@ Public page for my for-fun projects.
 * https://github.com/fexxor/the-fellowship
 * https://github.com/fexxor/yahtzee
 * https://github.com/fexxor/kung
+
+## Update projects
+
+Run the update projects script.
+
+    $ ./update-projects.sh
