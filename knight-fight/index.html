@@ -5,21 +5,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Riddarspelet</title>
     <style>
+        :root {
+            --red: #c62828;
+            --red-dark: color-mix(in srgb, var(--red) 70%, black);
+            --red-soft: rgb(from var(--red) r g b / 0.12);
+            --red-mid: rgb(from var(--red) r g b / 0.4);
+            --ink: #1a1a1a;
+            --muted: #5c5c5c;
+            --line: #e8e0e0;
+            --gold: #9a7200;
+        }
+
         body {
             font-family: Arial, sans-serif;
             background-color: #f0f0f0;
             margin: 0;
             padding: 0;
+            color: var(--ink);
         }
 
         header {
-            background-color: #4CAF50;
+            background-color: var(--red);
             color: white;
             padding: 1em 0;
             display: flex;
             gap: 1rem;
             justify-content: center;
             align-items: center;
+            letter-spacing: 0.05em;
 
             svg {
                 height: 3rem;
@@ -57,61 +70,200 @@
 
         .state {
             display: flex;
-            flex-direction: row;
-            gap: 1rem;
-
-            table {
-                flex: 3 1 0;
-                border-collapse: separate;
-                border-spacing: .5rem;
-               
-                svg {
-                    height: 3em;
-                    width: 3rem;
-                }
-            }
-
-            .player {
-                position: relative;
-
-                &::after {
-                    content: "";
-                    background-color: white;
-                    position: absolute;
-                    border: 2px solid transparent;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
-                    z-index: -1;
-                }
-
-                &.active {
-                    &::after {
-                        border: #4CAF50 2px solid;
-                    }
-                }
-            }
+            flex-wrap: wrap;
+            align-items: stretch;
+            gap: 1.25rem;
         }
 
+        .state-table {
+            flex: 1 1 16rem;
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+            border: 1px solid var(--line);
+            border-radius: 0.5rem;
+            overflow: hidden;
+            font-size: 0.95rem;
+            line-height: 1.3;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+        }
+
+        .state-table thead th {
+            padding: 0.55rem 0.7rem;
+            background: var(--red);
+            color: #fff;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            text-align: center;
+            border-bottom: none;
+            white-space: nowrap;
+        }
+
+        .state-table thead th:first-child {
+            text-align: left;
+            padding-left: 0.9rem;
+        }
+
+        .state-table tbody td {
+            padding: 0.75rem 0.7rem;
+            text-align: center;
+            vertical-align: middle;
+            border-bottom: 1px solid var(--line);
+            color: var(--ink);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .state-table tbody td.stat {
+            color: var(--muted);
+            font-size: 1.05rem;
+            font-weight: 600;
+            min-width: 3.25rem;
+        }
+
+        .state-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .state-table .player-cell {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            text-align: left;
+            padding-left: 0.2rem;
+        }
+
+        .state-table .player-cell svg {
+            height: 2.25rem;
+            width: 2.25rem;
+            flex-shrink: 0;
+        }
+
+        .state-table .player-name {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.2rem;
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
+
+        .state-table .turn-badge {
+            display: none;
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: var(--red-dark);
+            background: #fff;
+            border: 1px solid var(--red-mid);
+            padding: 0.12rem 0.4rem;
+            border-radius: 0.25rem;
+        }
+
+        .state-table .player.active {
+            background: var(--red-soft);
+        }
+
+        .state-table .player.active td:first-child {
+            box-shadow: inset 4px 0 0 var(--red);
+        }
+
+        .state-table .player.active .turn-badge {
+            display: inline-block;
+        }
+
+        .state-table .player:not(.active) td {
+            opacity: 0.88;
+        }
+
+        .state-table .gold {
+            font-weight: 800;
+            font-size: 1.1rem;
+            color: var(--gold);
+            min-width: 4rem;
+        }
+
+        #player1 { color: var(--red-dark); }
+        #player2 { color: #1565c0; }
+
         .die-container {
-            flex: 1 1 0;
+            flex: 0 0 auto;
             display: flex;
             justify-content: center;
             align-items: center;
-            margin-top: 1rem;
         }
 
         .roll-die {
             height: 6rem;
             width: 6rem;
+            padding: 0.65rem;
             border: 2px solid black;
             border-radius: .5rem;
             background-color: white;
             color: black;
-            font-size: 1.15em;
-            font-weight: bold;
             cursor: pointer;
+            box-sizing: border-box;
+        }
+
+        .roll-die.rumbling {
+            animation: die-rumble 0.55s ease-in-out;
+        }
+
+        @keyframes die-rumble {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            10% { transform: translate(-4px, 2px) rotate(-6deg); }
+            20% { transform: translate(5px, -3px) rotate(5deg); }
+            30% { transform: translate(-6px, -1px) rotate(-4deg); }
+            40% { transform: translate(4px, 3px) rotate(7deg); }
+            50% { transform: translate(-3px, -4px) rotate(-5deg); }
+            60% { transform: translate(5px, 1px) rotate(3deg); }
+            70% { transform: translate(-4px, 3px) rotate(-7deg); }
+            80% { transform: translate(3px, -2px) rotate(4deg); }
+            90% { transform: translate(-2px, 1px) rotate(-2deg); }
+            100% { transform: translate(0, 0) rotate(0deg); }
+        }
+
+        .die-face {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            width: 100%;
+            height: 100%;
+        }
+
+        .die-face .pip {
+            width: 0.85rem;
+            height: 0.85rem;
+            border-radius: 50%;
+            background: #222;
+            margin: auto;
+            opacity: 0;
+        }
+
+        .die-face[data-value="1"] .pip:nth-child(5),
+        .die-face[data-value="2"] .pip:nth-child(1),
+        .die-face[data-value="2"] .pip:nth-child(9),
+        .die-face[data-value="3"] .pip:nth-child(1),
+        .die-face[data-value="3"] .pip:nth-child(5),
+        .die-face[data-value="3"] .pip:nth-child(9),
+        .die-face[data-value="4"] .pip:nth-child(1),
+        .die-face[data-value="4"] .pip:nth-child(3),
+        .die-face[data-value="4"] .pip:nth-child(7),
+        .die-face[data-value="4"] .pip:nth-child(9),
+        .die-face[data-value="5"] .pip:nth-child(1),
+        .die-face[data-value="5"] .pip:nth-child(3),
+        .die-face[data-value="5"] .pip:nth-child(5),
+        .die-face[data-value="5"] .pip:nth-child(7),
+        .die-face[data-value="5"] .pip:nth-child(9),
+        .die-face[data-value="6"] .pip:nth-child(1),
+        .die-face[data-value="6"] .pip:nth-child(3),
+        .die-face[data-value="6"] .pip:nth-child(4),
+        .die-face[data-value="6"] .pip:nth-child(6),
+        .die-face[data-value="6"] .pip:nth-child(7),
+        .die-face[data-value="6"] .pip:nth-child(9) {
+            opacity: 1;
         }
         
         .board {
@@ -156,6 +308,32 @@
             pointer-events: none;
             user-select: none;
         }
+
+        svg  {
+            [data-ring="outer"] {
+                fill: rgb(from var(--red) r g b / 0.25);
+            }
+
+            [data-ring="middle"] {
+                fill: rgb(from var(--red) r g b / 0.5);
+            }
+
+            [data-ring="inner"] {
+                fill: rgb(from var(--red) r g b / 0.75);
+            }
+
+            [data-ring="center"] {
+                fill: var(--red);
+            }
+        }
+
+        #player1 {
+            color: green;   
+        }
+
+        #player2 {
+            color: blue;
+        }
     </style>
 </head>
 <body>
@@ -197,42 +375,70 @@
         <aside>
             <div>
                 <h2>Status</h2>
-            <div class="state">
-                <table>
-                    <tr>
-                        <th>Spelare</th>
-                        <th>Guld</th>
-                        <th>Rustning</th>
-                        <th>Vapen</th>
-                        <th>Häst</th>
-                    </tr>
-                    <tr class="player active">
-                        <td>
-                            <svg id="player1" color="red">
-                                <use href="#knight" />
-                            </svg>
-                        </td>
-                        <td>300</td>
-                        <td>2</td>
-                        <td>1</td>
-                        <td>1</td>
-                    </tr>
-                    <tr class="player">
-                        <td>
-                            <svg id="player1" color="blue">
-                                <use href="#knight" />
-                            </svg>
-                        </td>
-                        <td>300</td>
-                        <td>2</td>
-                        <td>1</td>
-                        <td>1</td>
-                    </tr>
-                </table>
-                <div class="die-container">
-                    <button class="roll-die">Slå tärning</button>
+                <div class="state">
+                    <table class="state-table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Spelare</th>
+                                <th scope="col">Guld</th>
+                                <th scope="col">Rustning</th>
+                                <th scope="col">Vapen</th>
+                                <th scope="col">Häst</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="player active">
+                                <td>
+                                    <div class="player-cell">
+                                        <svg id="player1" aria-hidden="true">
+                                            <use href="#knight" />
+                                        </svg>
+                                        <span class="player-name">
+                                            Riddare 1
+                                            <span class="turn-badge">Din tur</span>
+                                        </span>
+                                    </div>
+                                </td>
+                                <td class="gold">300</td>
+                                <td class="stat">2</td>
+                                <td class="stat">1</td>
+                                <td class="stat">1</td>
+                            </tr>
+                            <tr class="player">
+                                <td>
+                                    <div class="player-cell">
+                                        <svg id="player2" aria-hidden="true">
+                                            <use href="#knight" />
+                                        </svg>
+                                        <span class="player-name">
+                                            Riddare 2
+                                            <span class="turn-badge">Din tur</span>
+                                        </span>
+                                    </div>
+                                </td>
+                                <td class="gold">300</td>
+                                <td class="stat">2</td>
+                                <td class="stat">1</td>
+                                <td class="stat">1</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="die-container">
+                        <button class="roll-die" type="button" aria-label="Slå tärning">
+                            <span class="die-face" data-value="1" aria-live="polite">
+                                <span class="pip"></span>
+                                <span class="pip"></span>
+                                <span class="pip"></span>
+                                <span class="pip"></span>
+                                <span class="pip"></span>
+                                <span class="pip"></span>
+                                <span class="pip"></span>
+                                <span class="pip"></span>
+                                <span class="pip"></span>
+                            </span>
+                        </button>
+                    </div>
                 </div>
-            </div>
             </div>
             <div class="rules">
                 <h2>Regler</h2>
@@ -283,6 +489,14 @@
                                 </li>
                             </ul>
                         </li>
+                        <li>
+                            <b>Muta (kanske försvinner)</b>
+                            <ul>
+                                <li>
+                                    Den aktiva spelaren kan välja att använda 1500 guld för att betala sig in ett steg närmre hovet.
+                                </li>
+                            </ul>
+                        </li>
                     </ul>
                 
                 <h3>Duell</h3>
@@ -315,72 +529,15 @@
                     Varje spelare kan samla guld genom att landa på en ruta med guld, eller genom att vinna dueller.
                 </p>
                 <p>
-                    Guld kan användas för att köpa bättre rustning, vapen eller häst.
+                    Guld kan användas för att köpa bättre rustning, vapen eller häst. Alla spelare börjar med den första nivån av rustning, vapen och häst.
                 </p>
-                <h4>Rustning</h4>
-                <table>
-                    <tr>
-                        <th>Nivå</th>
-                        <th>Kostnad</th>
-                        <th>Effekt</th>
-                    </tr>
-                    <tr>
-                        <td>1</td>
-                        <td>0</td>
-                        <td>+1 i försvar</td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>100</td>
-                        <td>+2 i försvar</td>
-                    </tr>
-                    <tr>
-                        <td>3</td>
-                        <td>200</td>
-                        <td>+3 i försvar</td>
-                    </tr>
-                </table>
-                <h4>Vapen</h4>
-                <table>
-                    <tr>
-                        <th>Nivå</th>
-                        <th>Kostnad</th>
-                        <th>Effekt</th>
-                    </tr>
-                    <tr>
-                        <td>1</td>
-                        <td>0</td>
-                        <td>*1 i anfall</td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>100</td>
-                        <td>*2 i anfall</td>
-                    </tr>
-                    <tr>
-                        <td>3</td>
-                        <td>200</td>
-                        <td>*3 i anfall</td>
-                    </tr>
-                </table>
-                <h4>Häst</h4>
-                <table>
-                    <tr>
-                        <th>Nivå</th>
-                        <th>Kostnad</th>
-                        <th>Effekt</th>
-                    </tr>
-                    <tr>
-                        <td>1</td>
-                        <td>0</td>
-                        <td>Ingen effekt</td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>100</td>
-                        <td>Kan stanna när som helst</td>
-                    </tr>
-                </table>
+
+                <div id="shop-upgrades"></div>
+
+                <h3>Hur vinner man?</h3>
+                <p>
+                    <b>Den spelare som först når hovet vinner spelet.</b> Det finns dock ett specialfall när man bara är två som spelar, att man kan hamna i den inre cikeln, medan motspelaren är kvar i den yttre. De kommer aldrig kunna mötas i duell igen, och då vinner den spelare som kommit in i den inre cirkeln först.
+                </p>
             </div>
         </aside>
     </main>
@@ -389,29 +546,134 @@
         const CX = SIZE / 2;
         const CY = SIZE / 2;
 
+        const shop = {
+            armor: {
+                title: 'Rustning',
+                description: "Rustningar gör dig mer motståndskraftig. Varje nivå adderar till din försvarsförmåga.",
+                levels: {
+                    1: {
+                        cost: 0,
+                        effect: 1,
+                        description: 'Enkel rustning som ger +1 i försvar.',
+                    },
+                    2: {
+                        cost: 700,
+                        effect: 7,
+                        description: 'Bättre rustning som ger +7 i försvar.',
+                    },
+                    3: {
+                        cost: 1400,
+                        effect: 14,
+                        description: 'Bäst rustning som ger +14 i försvar.',
+                    },
+                }
+            },
+            weapon: {
+                title: 'Vapen',
+                description: "Vapen gör dina anfall mer effektiva, och multiplicerar dina tärningskast med vapnets anfallsvärde.",
+                levels: {
+                    1: {
+                        cost: 0,
+                        effect: 1,
+                        description: 'Enkelt vapen som ger *1 i anfall.',
+                    },
+                    2: {
+                        cost: 700,
+                        effect: 2,
+                        description: 'Bättre vapen som ger *2 i anfall.',
+                    },
+                    3: {
+                        cost: 1400,
+                        effect: 3,
+                        description: 'Bäst vapen som ger *3 i anfall.',
+                    },
+                }
+            },
+            horse: {
+                title: 'Häst',
+                description: "Hästar gör dig snabbare på spelplanen. Varje nivå ger +1 i hastighet.",
+                levels: {
+                    1: {
+                        cost: 0,
+                        effect: 0,
+                        description: 'Skruttig häst som tar dig runt på spelplanen.',
+                    },
+                    2: {
+                        cost: 400,
+                        effect: 1,
+                        description: 'Piggare häst som ger +1 i hastighet.',
+                    },
+                    3: {
+                        cost: 800,
+                        effect: 2,
+                        description: 'Spänstig häst som ger +2 i hastighet.',
+                    },
+                },
+            },
+        };
+
+        function renderShopUpgrades() {
+            const container = document.getElementById('shop-upgrades');
+            container.replaceChildren(
+                ...Object.values(shop).flatMap(({ title, description, levels }) => {
+                    const heading = document.createElement('h4');
+                    heading.textContent = title;
+
+                    const intro = document.createElement('p');
+                    intro.textContent = description;
+
+                    const table = document.createElement('table');
+                    table.innerHTML = `
+                        <thead>
+                            <tr>
+                                <th>Nivå</th>
+                                <th>Kostnad</th>
+                                <th>Effekt</th>
+                            </tr>
+                        </thead>
+                    `;
+                    const tbody = document.createElement('tbody');
+                    for (const [level, item] of Object.entries(levels)) {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${level}</td>
+                            <td>${item.cost}</td>
+                            <td>${item.description}</td>
+                        `;
+                        tbody.appendChild(row);
+                    }
+                    table.appendChild(tbody);
+                    return [heading, intro, table];
+                })
+            );
+        }
+
+        renderShopUpgrades();
+
         const outerRing = [
             { index: 0, type: 'gold-100' },
-            { index: 1 },
-            { index: 2 },
-            { index: 3, type: 'gold-100' },
+            { index: 1 },   
+            { index: 2, type: 'turn-around' },
+            { index: 3, type: 'gold-200' },
             { index: 4 },
-            { index: 5 },
-            { index: 6, type: 'gold-100'  },
+            { index: 5, type: 'roll-again' },
+            { index: 6, type: 'gold-300'  },
             { index: 7 },
-            { index: 8 },
+            { index: 8, type: 'turn-around' },
             { index: 9 , type: 'gold-100' },
             { index: 10 },
-            { index: 11 },
-            { index: 12 , type: 'gold-100' },
+            { index: 11, type: 'roll-again' },
+            { index: 12 , type: 'gold-200' },
             { index: 13 },
-            { index: 14 },
-            { index: 15 , type: 'gold-100' },
+            { index: 14, type: 'turn-around' },
+            { index: 15 , type: 'gold-300' },
             { index: 16 },
-            { index: 17 },
-            { index: 18 , type: 'gold-100' },
+            { index: 17, type: 'roll-again' },
+            { index: 18, type: 'gold-100-negative' },
             { index: 19 },
-            { index: 20 },
+            { index: 20, type: 'skip-turn' },
         ];
+
         const middleRing = [
             { index: 0, type: 'gold-100'  },
             { index: 1 },
@@ -425,16 +687,17 @@
             { index: 9 },
             { index: 10, type: 'gold-100'  },
             { index: 11 },
-            { index: 12, type: 'gold-100'  },
-            { index: 13 },
+            { index: 12, type: 'gold-100-negative'  },
+            { index: 13, },
         ];
+
         const innerRing = [
             { index: 0, type: 'gold-100'  },
             { index: 1 },
-            { index: 2 },
-            { index: 3, type: 'gold-100'  },
-            { index: 4 },
-            { index: 5, type: 'gold-100'  },
+            { index: 2, type: 'gold-100' },
+            { index: 3 },
+            { index: 4, type: 'gold-100' },
+            { index: 5 },
             { index: 6 },
         ];
 
@@ -443,6 +706,7 @@
             { id: 'middle', tiles: middleRing, inner: 171, outer: 257 },
             { id: 'inner', tiles: innerRing, inner: 86, outer: 171 },
         ];
+
         const CENTER = { id: 'center', index: 0 };
         const CENTER_RADIUS = 86;
 
@@ -477,6 +741,14 @@
 
         const typeToText = {
             'gold-100': '+100',
+            'gold-200': '+200',
+            'gold-300': '+300',
+            'gold-100-negative': '-100',
+            'gold-200-negative': '-200',
+            'gold-300-negative': '-300',
+            'turn-around': 'Byt håll',
+            'skip-turn': 'Stå över',
+            'roll-again': 'Slå igen',
         };
 
         RINGS.forEach((ring) => {
@@ -552,6 +824,27 @@
                 }
             });
         });
+
+        const rollDieButton = document.querySelector('.roll-die');
+        const dieFace = rollDieButton.querySelector('.die-face');
+
+        function rollDie() {
+            rollDieButton.classList.remove('rumbling');
+            // Restart animation even on repeated clicks
+            void rollDieButton.offsetWidth;
+            rollDieButton.classList.add('rumbling');
+
+            const value = Math.floor(Math.random() * 6) + 1;
+            dieFace.dataset.value = String(value);
+            rollDieButton.setAttribute('aria-label', `Tärning: ${value}`);
+            return value;
+        }
+
+        rollDieButton.addEventListener('animationend', () => {
+            rollDieButton.classList.remove('rumbling');
+        });
+
+        rollDieButton.addEventListener('click', rollDie);
     </script>
 </body>
 </html>
